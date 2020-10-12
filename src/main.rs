@@ -4,12 +4,14 @@ use lustre_lib::environment::RefEnvironment;
 use lustre_lib::evaluator::{operators::initialize_operators, eval};
 use lustre_lib::reader::{Reader, tokenizer::Tokenizer};
 use lustre_macro_reader;
+use tokio::runtime::Runtime;
 
 use std::io::{self, Read, Write};
 
 fn main() {
     let b = io::stdin().bytes();
 
+    let mut rt = Runtime::new().unwrap();
     let tokenizer = Tokenizer::new(b);
     let mut reader = Reader::new(tokenizer);
 
@@ -18,7 +20,7 @@ fn main() {
     
     macro_rules! lustre {
         (for $env:ident include $tokens:tt) => {
-            eval(&lustre_macro_reader::lustre!{$tokens}, &$env).unwrap();
+            eval(&lustre_macro_reader::lustre!{$tokens}, &$env, &mut rt).unwrap();
         };
     }
 
@@ -45,7 +47,7 @@ fn main() {
         io::stdout().flush().unwrap();
         let ast = reader.read().unwrap();
         if ast.as_ref().is_some() {
-            let result = eval(&ast, &mut environment).unwrap();
+            let result = eval(&ast, &mut environment, &mut rt).unwrap();
             if let Some(v) = result.as_ref() {
                 println!("* {:?}", v);
             } else {

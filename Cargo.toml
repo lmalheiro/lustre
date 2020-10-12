@@ -9,3 +9,5 @@ edition = "2018"
 [dependencies]
 lustre_lib = { path = "../lustre-lib"}
 lustre-macro-reader = { path = "../lustre-macro-reader"}
+tokio = { version="0.2.22", features=["rt-core", "rt-threaded"] }
+futures = "0.3.6"
