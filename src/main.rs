@@ -19,13 +19,13 @@ fn main() {
     initialize_operators(&mut environment);
     
     macro_rules! lustre {
-        (for $env:ident include $tokens:tt) => {
-            eval(&lustre_macro_reader::lustre!{$tokens}, &$env, &mut rt).unwrap();
+        (for $env:expr; include $tokens:tt) => {
+            eval(&lustre_macro_reader::lustre!{$tokens}, $env, &mut rt).unwrap();
         };
     }
 
     lustre! {
-        for environment include 
+        for environment.clone(); include 
         (def 'fact
             (lambda (n)
                 (if (> n 1)
@@ -33,7 +33,7 @@ fn main() {
                     1)))
     }
     lustre! {
-        for environment include 
+        for environment.clone(); include 
         (def 'fib
              (lambda (n)
                  (if (< n 3)
@@ -47,7 +47,7 @@ fn main() {
         io::stdout().flush().unwrap();
         let ast = reader.read().unwrap();
         if ast.as_ref().is_some() {
-            let result = eval(&ast, &mut environment, &mut rt).unwrap();
+            let result = eval(&ast, environment.clone(), &mut rt).unwrap();
             if let Some(v) = result.as_ref() {
                 println!("* {:?}", v);
             } else {
