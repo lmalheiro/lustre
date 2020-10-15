@@ -7,7 +7,7 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-lustre_lib = { path = "../lustre-lib"}
-lustre-macro-reader = { path = "../lustre-macro-reader"}
+lustre_lib = { git = "https://github.com/lmalheiro/lustre-lib.git", branch="master" }
+lustre-macro-reader = { git = "https://github.com/lmalheiro/lustre-macro-reader.git", branch="master" }
 tokio = { version="0.2.22", features=["rt-core", "rt-threaded"] }
 futures = "0.3.6"
